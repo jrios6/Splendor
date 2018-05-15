@@ -1,11 +1,15 @@
 # Splendor  
-This project is a replication of the popular Splendor boardgame, designed for AI development. Splendor is a easy-to-learn, yet complex zero-sum boardgame that requires strategic thinking, deception, adverserial tactics, player cooperation and logical computation.
+This project is a replication of the popular Splendor boardgame, designed for AI development. Splendor is an easy-to-learn, yet complex zero-sum boardgame that requires strategic thinking, deception, adverserial tactics, player cooperation and logical computation.
 
 While you can play against AI today through the existing Splendor iOS and Andrioid app, the agents are relatively weak and are below human-level performance. The primary goal of this project is to develop game-playing Agents using classical and deep reinforcement learning techniques that can surpass existing AI and top players in the game.
 
 
 ## The game
-"Splendor is a game of chip-collecting and card development. Players are merchants of the Renaissance trying to buy gem mines, means of transportation, shops—all in order to acquire the most prestige points. If you're wealthy enough, you might even receive a visit from a noble at some point, which of course will further increase your prestige." -- [BoardGameGeek](https://boardgamegeek.com/boardgame/148228/splendor)
+"Splendor is a game of chip-collecting and card development. Players are merchants of the Renaissance trying to buy gem mines, means of transportation, shops—all in order to acquire the most prestige points. If you're wealthy enough, you might even receive a visit from a noble at some point, which of course will further increase your prestige.
+
+On your turn, you may (1) collect chips (gems), or (2) buy and build a card, or (3) reserve one card. If you collect chips, you take either three different kinds of chips or two chips of the same kind. If you buy a card, you pay its price in chips and add it to your playing area. To reserve a card—in order to make sure you get it, or, why not, your opponents don't get it—you place it in front of you face down for later building; this costs you a round, but you also get gold in the form of a joker chip, which you can use as any gem.
+
+All of the cards you buy increase your wealth as they give you a permanent gem bonus for later buys; some of the cards also give you prestige points. In order to win the game, you must reach 15 prestige points before your opponents do." - [BoardGameGeek](https://boardgamegeek.com/boardgame/148228/splendor)
 
 ## Usage
 
