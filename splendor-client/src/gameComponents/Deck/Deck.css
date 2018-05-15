@@ -1,0 +1,20 @@
+.Deck {
+  user-select: none;
+  font-family: Helvetica;
+  font-weight: 500;
+  font-size: 15px;
+  cursor: pointer;
+  background: #2b393e;
+  border-radius: 6px;
+  border: 1px solid #cdcdcd;
+  color: white;
+  width: 100px;
+  height: 130px;
+  transition: all 0.1s;
+  overflow: hidden;
+}
+
+.Deck > h4 {
+  padding-top: 18px;
+  font-size: 16px;
+}

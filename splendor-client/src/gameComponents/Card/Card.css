@@ -1,0 +1,86 @@
+.DevCard {
+  user-select: none;
+  font-family: Helvetica;
+  font-weight: 500;
+  font-size: 16px;
+  cursor: pointer;
+  background: #9db8c1;
+  border-radius: 6px;
+  border: 1px solid #cdcdcd;
+  width: 100px;
+  height: 130px;
+  transition: all 0.1s;
+  overflow: hidden;
+}
+
+.purchasable {
+  border: 2px solid #0aca33;
+}
+
+.cardPoints {
+  align-self: flex-start;
+  margin: 8px 0px 0px 16px;
+}
+
+.gemType {
+  margin: 8px 0px 0px 8px;
+}
+
+.cardHeader {
+  display: flex;
+  flex-direction: row;
+  color: white;
+}
+
+.cardBody {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  padding: 10px;
+}
+
+.gem {
+  align-self: flex-start;
+  font-weight: bold;
+  margin: 3px;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  border: 1px solid black;
+  text-align: center;
+  font-size: 17px;
+  padding-top: 2px;
+  margin-bottom: 4px;
+  color: white;
+  -webkit-text-stroke: 1px black;
+  text-shadow:
+    1px 1px 0 #000,
+    -1px -1px 0 #000,
+    1px -1px 0 #000,
+    -1px 1px 0 #000,
+    1px 1px 0 #000;
+}
+
+.blue {
+  background-color: #3468c7;
+}
+
+.red {
+  background-color: #b32a2a;
+}
+
+.green {
+  background-color: #22c14c;
+}
+
+.white {
+  background-color: white;
+}
+
+.black {
+  background-color: black;
+}
+
+.gold {
+  background-color: yellow;
+}

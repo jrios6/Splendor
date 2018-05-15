@@ -1,0 +1,18 @@
+.NobleCard {
+  display: flex;
+  user-select: none;
+  font-family: Helvetica;
+  font-weight: 500;
+  font-size: 16px;
+  text-align: left;
+  flex-direction: column;
+  justify-content: flex-start;
+  cursor: pointer;
+  background: #9db8c1;
+  border-radius: 6px;
+  border: 1px solid #cdcdcd;
+  width: 100px;
+  height: 100px;
+  transition: all 0.1s;
+  overflow: hidden;
+}

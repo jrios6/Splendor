@@ -1,0 +1,16 @@
+.Action {
+  width: 110px;
+  background: grey;
+  margin: 1px;
+  padding: 5px;
+  text-align: center;
+}
+
+.Action:hover {
+  background: #454548;
+}
+
+.Action .CoinsContainer {
+  display: flex;
+  margin: auto;
+}
