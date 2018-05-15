@@ -1,0 +1,17 @@
+.Action {
+  width: 100px;
+  background: #ff9840;
+  margin: 2px 2px;
+  padding: 1px 5px 5px 5px;
+  text-align: center;
+}
+
+.Action:hover {
+  background: #ec7610;
+}
+
+.Action .CoinsContainer {
+  display: flex;
+  width: 110px;
+
+}

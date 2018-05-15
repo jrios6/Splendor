@@ -28,7 +28,7 @@ $ cd splendor-server
 $ FLASK_APP=app.py flask run
 ```
 
-With that, you can start playing against the AI on using at http://localhost:3000/.
+With that, you can start playing against the AI using the client at http://localhost:3000/.
 
 ## What's next?
 This project is currently under development and there are alot of fixes, code refactoring and features to look forward to!

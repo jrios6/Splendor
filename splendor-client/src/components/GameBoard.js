@@ -13,15 +13,9 @@ import './Player/Player.css';
 class GameBoard extends Component {
   constructor() {
     super();
-    this.handleSubmit = this.handleSubmit.bind(this);
     this.updateState = this.updateState.bind(this);
     this.handleAction = this.handleAction.bind(this);
-    this.state = {
-      player1: 'a',
-      player2: 'b',
-      player3: 'c',
-      player4: 'd',
-    }
+    this.state = {}
   }
 
   cardsAreEqual(c1, c2) {
@@ -84,6 +78,7 @@ class GameBoard extends Component {
     })
 
     this.setState({
+      handlingAction: false,
       treasury: board['treasury'],
       leaderboard: board['leaderboard'],
       round: board['round'],
@@ -99,83 +94,56 @@ class GameBoard extends Component {
     })
   }
 
-  handleSubmit(event) {
-    event.preventDefault();
-
-    let payload = {
-      'player1': this.state.player1,
-      'player2': this.state.player2,
-      'player3': this.state.player3,
-      'player4': this.state.player4,
-    };
-
-    let data = new FormData();
-    data.append( "json", JSON.stringify( payload ) );
-
-    fetch('http://localhost:5000/start', {
-      method: 'POST',
-      body: data,
-    }).then((response) => response.json())
-    .then((myJson) => this.updateState(myJson));
-  }
-
   handleAction(option) {
-    console.log("Handling Action")
-    fetch(`http://localhost:5000/game/${option}`, {
-      method: 'GET',
-    }).then((response) => response.json())
-    .then((myJson) => this.updateState(myJson));
+    if (!this.state.handlingAction) {
+      this.setState({ handlingAction: true })
+      fetch(`http://localhost:5000/game/${option}`, {
+        method: 'GET',
+      }).then((response) => response.json())
+      .then((myJson) => this.updateState(myJson));
+    } else {
+      console.log("Please wait for server to respond")
+    }
   }
 
-  handleReservation(card) {
-  }
-
-  onChange = (e) => {
-        const state = this.state
-        state[e.target.name] = e.target.value;
-        this.setState(state);
-      }
 
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to Grandeur</h1>
-          <form onSubmit={this.handleSubmit}>
-            <input type="text" name="player1" value={this.state.player1} onChange={this.onChange} />
-            <input type="text" name="player2" value={this.state.player2} onChange={this.onChange} />
-            <input type="text" name="player3" value={this.state.player3} onChange={this.onChange} />
-            <input type="text" name="player4" value={this.state.player4} onChange={this.onChange} />
-            <input type="submit" value="Submit" />
-          </form>
-        </header>
-        <div className="Nobles">
-          <h4>Nobles</h4>
-          {this.state.nobles? this.state.nobles.map((noble) => {
-            return <div><Noble {...noble} /></div>
-          }): ''}
-        </div>
-        <div className="Actions">
-          <h4>Collect Coins</h4>
-          {this.state.actions ? this.state.actions.map((action) => {
-            return <tr><Action {...action} handleAction={this.handleAction}/></tr>}) : ''}
-        </div>
-        {this.state.treasury? <Treasury {...this.state.treasury}/> : ''}
-        <div className="board">
+      <div className="GameBoard">
+        <div className="Column1">
           <h2>Round {this.state.round}</h2>
-          {this.state.players? <div className="board-row1">
-            <div className={this.state.current_player == 0? "ActivePlayer" : "Player"}>
-              <Player {...this.state.players[0]} handleAction={this.handleAction}/>
-            </div>
+            <h4>Nobles</h4>
+          <div className="Nobles">
+            {this.state.nobles? this.state.nobles.map((noble) => {
+              return <div><Noble {...noble} /></div>
+            }): ''}
+          </div>
+          {this.state.treasury? <Treasury {...this.state.treasury}/> : ''}
+          <h4>Collect Coins</h4>
+          <div className="Actions">
+            {this.state.actions ? this.state.actions.map((action) => {
+              return <tr><Action {...action} handleAction={this.handleAction}/></tr>}) : ''}
+          </div>
+        </div>
+        <div className="players">
+          {this.state.players? <div>
+            <Player active={this.state.current_player == 1} {...this.state.players[1]}
+              handleAction={this.handleAction} />
           </div>: ''}
+          {this.state.players? <div className="board-row3">
+            <Player active={this.state.current_player == 2} {...this.state.players[2]}
+              handleAction={this.handleAction} />
+          </div>: ''}
+          {this.state.players? <div>
+            <Player active={this.state.current_player == 3} {...this.state.players[3]}
+              handleAction={this.handleAction} />
+          </div> : ''}
+        </div>
+        <div className="board">
           <div className="board-row2">
-            {this.state.players? <div className={this.state.current_player == 3? "ActivePlayer" : "Player"}>
-              <Player {...this.state.players[3]} handleAction={this.handleAction}/>
-            </div> : ''}
             <table>
               <tr>
-                <td><Deck {...this.state  .deck_1} handleAction={this.handleAction}/></td>
+                <td><Deck {...this.state.deck_1} handleAction={this.handleAction}/></td>
                 {this.state.dev_cards? this.state.dev_cards.map((card) => {
                   if (card.tier === 1) {
                     return <td><Card {...card} handleAction={this.handleAction}/></td>
@@ -183,7 +151,7 @@ class GameBoard extends Component {
                 }): ''}
               </tr>
               <tr>
-                <td><Deck {...this.state  .deck_2} handleAction={this.handleAction}/></td>
+                <td><Deck {...this.state.deck_2} handleAction={this.handleAction}/></td>
                 {this.state.dev_cards? this.state.dev_cards.map((card) => {
                   if (card.tier === 2) {
                     return <td><Card {...card} handleAction={this.handleAction}/></td>
@@ -191,7 +159,7 @@ class GameBoard extends Component {
                 }): ''}
               </tr>
               <tr>
-                <td><Deck {...this.state  .deck_3} handleAction={this.handleAction}/></td>
+                <td><Deck {...this.state.deck_3} handleAction={this.handleAction}/></td>
                 {this.state.dev_cards? this.state.dev_cards.map((card) => {
                   if (card.tier === 3) {
                     return <td><Card {...card} handleAction={this.handleAction}/></td>
@@ -199,15 +167,11 @@ class GameBoard extends Component {
                 }): ''}
               </tr>
             </table>
-            {this.state.players? <div className={this.state.current_player == 1? "ActivePlayer" : "Player"}>
-              <Player {...this.state.players[1]} handleAction={this.handleAction}/>
-            </div>: ''}
 
           </div>
-          {this.state.players? <div className="board-row3">
-            <div className={this.state.current_player == 2? "ActivePlayer" : "Player"}>
-              <Player {...this.state.players[2]}/>
-            </div>
+          {this.state.players? <div>
+            <Player active={this.state.current_player == 0} {...this.state.players[0]}
+              handleAction={this.handleAction} />
           </div>: ''}
         </div>
       </div>

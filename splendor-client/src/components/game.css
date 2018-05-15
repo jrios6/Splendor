@@ -1,5 +1,10 @@
-.FlexContainer {
+.GameBoard {
   display: flex;
+  flex-direction: row;
+}
+
+.Column1 {
+  width: 400px;
 }
 
 .Title {
@@ -14,29 +19,19 @@
 
 .Actions {
   display: flex;
-  width: 100%;
   flex-wrap: wrap;
-}
-
-.Player {
-  background-color: grey;
-  margin: 20px;
-}
-
-.ActivePlayer{
-  background-color: #fafbb1;
-  margin: 20px;
-}
-
-.Nobles {
-  display: flex;
-  flex-direction: row;
+  align-content: flex-start;
 }
 
 .board {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.Nobles {
+  display: flex;
+  flex-direction: row;
 }
 
 .board-row2 {

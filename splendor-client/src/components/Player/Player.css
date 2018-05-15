@@ -1,0 +1,34 @@
+h4 {
+  margin: 8px;
+}
+
+.ActivePlayer {
+  background-color: #fafbb1;
+  margin: 20px;
+}
+
+.Player {
+  background-color: grey;
+  margin: 20px;
+}
+
+.FlexContainer {
+  display: flex;
+}
+
+.Developments .DevCard {
+  width: 85px;
+  height: 100px;
+}
+
+.Developments .DevCard .cardBody {
+  padding: 5px 10px;
+}
+
+.Developments .DevCard .gem {
+  margin: 3px;
+  width: 23px;
+  height: 23px;
+  font-size: 16px;
+  padding-top: 1.5px;
+}
