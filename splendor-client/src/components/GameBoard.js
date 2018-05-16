@@ -25,6 +25,7 @@ class GameBoard extends Component {
   }
 
   updateState(myJson) {
+    console.log(myJson)
     let board = JSON.parse(myJson[0]);
     let actions = JSON.parse(myJson[1]);
     let dev_cards = board['open_tier_1'].concat(board['open_tier_2'], board['open_tier_3']);
@@ -34,6 +35,15 @@ class GameBoard extends Component {
     let deck_1 = {tier: 1, cards: 40};
     let deck_2 = {tier: 2, cards: 40};
     let deck_3 = {tier: 3, cards: 40};
+    let last_action = undefined;
+    let last_player = board['current_player']-1
+    if (last_player == -1) {
+      last_player = players.length + last_player;
+    }
+
+    if (myJson.length > 2) {
+      last_action = JSON.parse(myJson[2]);
+    }
 
     // Add action into cards
     actions.map((action) => {
@@ -91,7 +101,13 @@ class GameBoard extends Component {
       deck_1: deck_1,
       deck_2: deck_2,
       deck_3: deck_3,
-    })
+      last_action: last_action,
+      last_player: last_player,
+    });
+
+    if (this.state.current_player != 0) {
+      this.handleAction(99);
+    }
   }
 
   handleAction(option) {
@@ -101,6 +117,10 @@ class GameBoard extends Component {
         method: 'GET',
       }).then((response) => response.json())
       .then((myJson) => this.updateState(myJson));
+
+      // Auto-update by getting agent's turn
+
+
     } else {
       console.log("Please wait for server to respond")
     }
@@ -140,6 +160,9 @@ class GameBoard extends Component {
           </div> : ''}
         </div>
         <div className="board">
+          {this.state.players? <p>
+            {this.state.players[this.state.last_player].name}'s last move was <Action {...this.state.last_action}/>
+          </p>: ''}
           <div className="board-row2">
             <table>
               <tr>
@@ -170,7 +193,7 @@ class GameBoard extends Component {
 
           </div>
           {this.state.players? <div>
-            <Player active={this.state.current_player == 0} {...this.state.players[0]}
+            <Player active={true} {...this.state.players[0]}
               handleAction={this.handleAction} />
           </div>: ''}
         </div>

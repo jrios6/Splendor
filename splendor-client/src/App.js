@@ -17,7 +17,7 @@ class App extends Component {
 
   handleSubmit(event) {
     event.preventDefault();
-
+    console.log(this.state)
     let payload = {
       'player1': this.state.player1,
       'player2': this.state.player2,

@@ -12,7 +12,10 @@ class Action extends Component {
 
   handleSubmit() {
     console.log(this.props.option)
-    this.props.handleAction(this.props.option)
+    if (this.props.handleAction) {
+      this.props.handleAction(this.props.option)
+    }
+
   }
 
   render() {
@@ -30,7 +33,7 @@ class Action extends Component {
             {this.props.gold > 0? <div className="gem gold">{this.props.gold}</div>: ''}
           </div>
         </div> : ''}
-        {/* {this.props.type == 'purchase_development' || this.props.type == 'reserve_open_development' ?
+        {this.props.type == 'purchase_development' || this.props.type == 'reserve_open_development' ?
         <div>
           <h4 className="Title">{this.props.type == 'purchase_development'? 'Purchase' : 'Reserve'}</h4>
           <Card {...this.props.card} />
@@ -44,7 +47,7 @@ class Action extends Component {
             </div>
           </div>
         </div>
-         : ''} */}
+         : ''}
 
       </div>
     );

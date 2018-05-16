@@ -4,6 +4,7 @@ from flask import jsonify
 import json
 
 from game_engine import *
+from helper import *
 
 from flask_cors import CORS
 
@@ -43,7 +44,7 @@ def startSingle():
     global agents
     print("Start")
     names = json.loads(request.form['json'])
-    game = SinglePlayerGame(names['player1'])
+    game = SinglePlayerGame(names['player1'], names['player2'], names['player3'], names['player4'])
     #print(game.get_state())
 
     agents.append(Agent())
@@ -55,19 +56,23 @@ def execute_action_single(action_id):
     print("action id", action_id)
     global game
     global agents
+
     if not game.has_ended():
-        game.execute_action(action_id)
-        if game.get_actions() == '[]':
-            # switches to next player if no action remaining
-            game.board.next_player()
+        if action_id != 99:
+            action = game.execute_action(action_id)
+            if game.get_actions() == '[]':
+                # switches to next player if no action remaining
+                game.board.next_player()
 
-            # agent moves
-            while game.board.current_player != 0:
-                game.execute_agent_action(agents[0].next_action(game))
-                if game.get_actions() == '[]':
-                    # switches to next player if no action remaining
-                    game.board.next_player()
+        elif game.board.current_player != 0:
+            # agent move
+            action = agents[0].next_action_search(game)
+            game.execute_agent_action(action)
+            if game.get_actions() == '[]':
+                # switches to next player if no action remaining
+                game.board.next_player()
 
-        return jsonify(game.get_state(), game.get_actions())
+        return jsonify(game.get_state(), game.get_actions(), json.dumps(action, cls=MyEncoder))
+
     print("Game Ended")
-    return 'Game Ended'
+    return jsonify(game.get_state(), game.get_actions())

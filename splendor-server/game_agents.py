@@ -5,61 +5,52 @@ class Agent:
     def __init__(self):
         self.state = None
         self.nodes_expanded = 0
-        
+
     def next_action(self, game):
-        actions = game.get_agent_actions()
-
-        best_action = None
-        max_utility = 0
-        for action in actions:
-            temp_board = copy.deepcopy(game.board)
-            player = temp_board.get_current_player()
-            temp_board.execute_action(player, action)
-            temp_board.update_noble(player)
-
-            utility = self.evaluate(temp_board.get_current_state(),
-                                    temp_board.get_current_player())
-
-            if utility > max_utility:
-                best_action = action
-                max_utility = utility
-
-            del temp_board
-
-        return best_action
+        """
+        Evaluates next state and return action with highest utility
+        """
+        self.current_player = game.board.get_current_player()
+        return self.search_action(game.board)
 
     def prune_actions(self, actions):
         remaining_actions = []
         for action in actions:
+            # remove reservation from deck action
             if type(action) != ReserveFromDeck:
                 remaining_actions.append(action)
         return remaining_actions
 
-    def next_action_maximax(self, game):
+    def next_action_search(self, game):
+        """
+        Recursively expands node with highest utility to a depth of 5.
+        """
         self.nodes_expanded = 0
-        current_player = game.board.get_current_player()
-        actions = game.board.available_actions(current_player)
-        best_action = None
-        max_utility = 0
-        for action in self.prune_actions(actions):
-            self.level = 0
-            temp_board = copy.deepcopy(game.board)
+        self.current_player = game.board.get_current_player()
+        actions = game.board.available_actions(self.current_player)
+        best_action = actions[0]
+        max_utility = -99
 
+        for action in self.prune_actions(actions):
+            depth = 0
+            temp_board = copy.deepcopy(game.board)
             nextAction = action
-            while self.level < 5:
+            action.describe()
+
+            while depth < 5:
                 nextPlayer = temp_board.get_current_player()
                 temp_board.execute_action(nextPlayer, nextAction)
                 temp_board.update_noble(nextPlayer)
 
                 if temp_board.available_actions(nextPlayer) == []:
-                    self.level += 1
-                    if self.level == 5:
+                    depth += 1
+                    if depth == 5:
                         break
                     temp_board.next_player()
 
                 nextAction = self.search_action(temp_board)
 
-            utility = self.evaluate(temp_board.get_current_state(),
+            utility = self.evaluate(temp_board,
                                     temp_board.get_current_player())
 
             if utility > max_utility:
@@ -67,22 +58,22 @@ class Agent:
                 best_action = action
 
             del temp_board
-
-        print('{} expanded {} nodes'.format(current_player.name, self.nodes_expanded))
+        print("Max Utility", max_utility)
+        print('{} expanded {} nodes'.format(self.current_player.name, self.nodes_expanded))
         return best_action
 
     def search_action(self, board):
         actions = board.available_actions(board.get_current_player())
 
-        best_action = None
-        max_utility = 0
+        best_action = actions[0]
+        max_utility = -99
         for action in self.prune_actions(actions):
             temp_board = copy.deepcopy(board)
             player = temp_board.get_current_player()
             temp_board.execute_action(player, action)
             temp_board.update_noble(player)
 
-            utility = self.evaluate(temp_board.get_current_state(),
+            utility = self.evaluate(temp_board,
                                     player)
 
             if utility > max_utility:
@@ -93,7 +84,7 @@ class Agent:
 
         return best_action
 
-    def evaluate(self, state, player):
+    def evaluate(self, board, player):
         self.nodes_expanded += 1
         # score state
         score = 0
@@ -109,4 +100,14 @@ class Agent:
 
         # print(player.name, score)
         # print("Coins", player.total_coins_count())
+
+        if max(board.leaderboard) >= 15 and player.points < 15 and player.name == self.current_player.name:
+            # negative points if terminal state is a loss
+            print(-sum(i >= 15 for i in board.leaderboard), "for ", player.name)
+            # -1 point for each player >= 15
+            return -sum(i >= 15 for i in board.leaderboard)
+
+        if player.points >= 15:
+            score += 10000
+
         return score
