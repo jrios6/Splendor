@@ -40,7 +40,7 @@ class MultiPlayerGame:
         action = available_actions[choice]
 
         # execute action
-        self.board.execute_action(player, action)
+        self.board.execute_action(player, action, False)
         self.board.update_noble(player)
 
 class SinglePlayerGame:
@@ -72,14 +72,14 @@ class SinglePlayerGame:
         action = available_actions[choice]
 
         # execute action
-        self.board.execute_action(player, action)
+        self.board.execute_action(player, action, False)
         self.board.update_noble(player)
 
         return action
 
     def execute_agent_action(self, action):
         player = self.board.get_current_player()
-        self.board.execute_action(player, action)
+        self.board.execute_action(player, action, False)
         self.board.update_noble(player)
 
 

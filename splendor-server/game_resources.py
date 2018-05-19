@@ -63,6 +63,15 @@ class Development:
             return True
         return False
 
+    def __eq__(self, other):
+        if type(other) != Development:
+            return False
+        isEqual = self.points == other.points and self.tier == other.tier and \
+                  self.gem_type == other.gem_type and self.red == other.red and \
+                  self.blue == other.blue and self.green == other.green and \
+                  self.black == other.black and self.white == other.white
+        return isEqual
+
     def describe(self):
         print("This is a tier {} {} card. {} red, {} blue, {} green, {} black, \
             {} white required. Gives {} points.".format(self.tier, self.gem_type,
@@ -346,9 +355,9 @@ class Board:
     def get_current_state(self):
         """Prints current state of board"""
         # development cards
-        # for card in self.open_tier_1 + self.open_tier_2 + self.open_tier_3:
-        #     if card:
-        #         card.describe()
+        for card in self.open_tier_1 + self.open_tier_2 + self.open_tier_3:
+            if card:
+                card.describe()
 
         # treasury
         #self.treasury.describe()
@@ -399,7 +408,8 @@ class Board:
         return legal_actions
 
 
-    def execute_action(self, player, action):
+    def execute_action(self, player, action, isAgent):
+        # Draw new card only if not agent simulation
         if type(action) == ReserveOpenDevelopment:
             # add card to player's reservation
             player.board_reservations.append(action.card)
@@ -407,13 +417,16 @@ class Board:
             # remove card from open tier and draw new card from deck
             if action.card in self.open_tier_1:
                 self.open_tier_1.remove(action.card)
-                self.open_tier_1.append(self.deck_tier_1.draw())
+                if not isAgent:
+                    self.open_tier_1.append(self.deck_tier_1.draw())
             elif action.card in self.open_tier_2:
                 self.open_tier_2.remove(action.card)
-                self.open_tier_2.append(self.deck_tier_2.draw())
+                if not isAgent:
+                    self.open_tier_2.append(self.deck_tier_2.draw())
             elif action.card in self.open_tier_3:
                 self.open_tier_3.remove(action.card)
-                self.open_tier_3.append(self.deck_tier_3.draw())
+                if not isAgent:
+                    self.open_tier_3.append(self.deck_tier_3.draw())
 
             # add 1 gold coin to player if available and remove from treasury
             if self.treasury.remove_coins("gold", 1):
@@ -423,7 +436,8 @@ class Board:
         elif type(action) == ReserveFromDeck:
             # draw top card from deck to player's reservation
             decks = [self.deck_tier_1, self.deck_tier_2, self.deck_tier_3]
-            player.deck_reservations.append(decks[action.deck].draw())
+            if not isAgent:
+                player.deck_reservations.append(decks[action.deck].draw())
 
             # add 1 gold coin to player if available and remove from treasury
             if self.treasury.remove_coins("gold", 1):
@@ -458,13 +472,16 @@ class Board:
             # remove card from open tier/ player reservations and draw new card
             if action.card in self.open_tier_1:
                 self.open_tier_1.remove(action.card)
-                self.open_tier_1.append(self.deck_tier_1.draw())
+                if not isAgent:
+                    self.open_tier_1.append(self.deck_tier_1.draw())
             elif action.card in self.open_tier_2:
                 self.open_tier_2.remove(action.card)
-                self.open_tier_2.append(self.deck_tier_2.draw())
+                if not isAgent:
+                    self.open_tier_2.append(self.deck_tier_2.draw())
             elif action.card in self.open_tier_3:
                 self.open_tier_3.remove(action.card)
-                self.open_tier_3.append(self.deck_tier_3.draw())
+                if not isAgent:
+                    self.open_tier_3.append(self.deck_tier_3.draw())
             elif action.card in player.board_reservations:
                 player.board_reservations.remove(action.card)
             elif action.card in player.deck_reservations:
@@ -586,4 +603,4 @@ class Board:
 
     def game_has_ended(self):
         """True if a player has at least 15 points"""
-        return max(self.leaderboard) >= 15
+        return max(self.leaderboard) >= 15 and self.get_current_player() == self.players[-1]

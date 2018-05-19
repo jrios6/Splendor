@@ -29,18 +29,23 @@ class Agent:
         self.current_player = game.board.get_current_player()
         actions = game.board.available_actions(self.current_player)
         best_action = actions[0]
+        best_action_seq = []
         max_utility = -99
 
         for action in self.prune_actions(actions):
             depth = 0
             temp_board = copy.deepcopy(game.board)
             nextAction = action
-            action.describe()
+            actionSeq = []
+            # action.describe()
 
             while depth < 5:
                 nextPlayer = temp_board.get_current_player()
-                temp_board.execute_action(nextPlayer, nextAction)
+                actionSeq.append((nextPlayer, nextAction))
+                temp_board.execute_action(nextPlayer, nextAction, True)
                 temp_board.update_noble(nextPlayer)
+                # nextAction.describe()
+                # temp_board.get_current_state()
 
                 if temp_board.available_actions(nextPlayer) == []:
                     depth += 1
@@ -50,16 +55,23 @@ class Agent:
 
                 nextAction = self.search_action(temp_board)
 
+
             utility = self.evaluate(temp_board,
                                     temp_board.get_current_player())
 
             if utility > max_utility:
                 max_utility = utility
                 best_action = action
+                best_action_seq = actionSeq
+
 
             del temp_board
         print("Max Utility", max_utility)
         print('{} expanded {} nodes'.format(self.current_player.name, self.nodes_expanded))
+        print("Best action seq")
+        for action in best_action_seq:
+            print(action[0].name, ':')
+            action[1].describe()
         return best_action
 
     def search_action(self, board):
@@ -68,19 +80,19 @@ class Agent:
         best_action = actions[0]
         max_utility = -99
         for action in self.prune_actions(actions):
-            temp_board = copy.deepcopy(board)
-            player = temp_board.get_current_player()
-            temp_board.execute_action(player, action)
-            temp_board.update_noble(player)
+            temp_board2 = copy.deepcopy(board)
+            player = temp_board2.get_current_player()
+            temp_board2.execute_action(player, action, True)
+            temp_board2.update_noble(player)
 
-            utility = self.evaluate(temp_board,
+            utility = self.evaluate(temp_board2,
                                     player)
 
             if utility > max_utility:
                 best_action = action
                 max_utility = utility
 
-            del temp_board
+            del temp_board2
 
         return best_action
 
